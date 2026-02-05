@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StudioBackendAPI.Data;
 using StudioBackendAPI.Models;
 using StudioBackendAPI.Services;
@@ -18,6 +19,7 @@ namespace StudioBackendAPI.Controllers
             _email = email;
         }
 
+        // ✅ POST: Submit Application Form
         [HttpPost]
         public async Task<IActionResult> Apply(ProjectApplication app)
         {
@@ -30,6 +32,17 @@ namespace StudioBackendAPI.Controllers
             );
 
             return Ok(new { success = true });
+        }
+
+        // ✅ GET: Fetch All Applications
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllApplications()
+        {
+            var applications = await _db.ProjectApplications
+                .OrderByDescending(x => x.Id)
+                .ToListAsync();
+
+            return Ok(applications);
         }
     }
 }

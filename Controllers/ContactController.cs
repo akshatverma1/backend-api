@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StudioBackendAPI.Data;
 using StudioBackendAPI.Models;
 using StudioBackendAPI.Services;
@@ -18,6 +19,7 @@ namespace StudioBackendAPI.Controllers
             _email = email;
         }
 
+        // ✅ POST: Submit Contact Form
         [HttpPost]
         public async Task<IActionResult> Send(ContactMessage message)
         {
@@ -30,6 +32,17 @@ namespace StudioBackendAPI.Controllers
             );
 
             return Ok(new { success = true });
+        }
+
+        // ✅ GET: Fetch All Contact Messages
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllContacts()
+        {
+            var messages = await _db.ContactMessages
+                .OrderByDescending(x => x.Id)
+                .ToListAsync();
+
+            return Ok(messages);
         }
     }
 }
